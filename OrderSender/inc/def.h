@@ -14,27 +14,27 @@ using namespace Json;
 
 /* 业务接口响应码 */
 enum send_rsp_code_t {
-	rsp_success 			= 1,	
-	rsp_again				= -1,
-	rsp_err_param			= -2,
-	rsp_no_user				= -3,	
-	rsp_no_interface		= -4,
-	rsp_invaild_order		= -5,
-	rsp_invaild_order_id 	= -6,
-	rsp_dup_order			= -7,
-	rsp_send_failed			= -8,
-	rsp_keep_1				= -9,
-	rsp_502					= -10,
-	rsp_keep_2				= -11,
-	rsp_timeout				= -12,
-	rsp_firewall			= -13
+	RSP_SUCCESS 			= 1,	
+	RSP_AGAIN				= -1,
+	RSP_ERR_PARAM			= -2,
+	RSP_NO_USER				= -3,	
+	RSP_NO_INTERFACE		= -4,
+	RSP_INVAILD_ORDER		= -5,
+	RSP_INVAILD_ORDER_ID 	= -6,
+	RSP_DUP_ORDER			= -7,
+	RSP_SEND_FAILED			= -8,
+	RSP_KEEP_1				= -9,
+	RSP_502					= -10,
+	RSP_KEEP_2				= -11,
+	RSP_TIMEOUT				= -12,
+	RSP_FIREWALL			= -13
 };
 
 /* 订单状态 */
 enum order_status_t {
-	order_finish 	= 2,
-	order_err_cgi 	= 54,
-	order_err_order = 53 
+	ORDER_FINISH 	= 2,
+	ORDER_ERR_CGI 	= 54,
+	ORDER_ERR_ORDER = 53 
 };
 
 /* 重试时间间隔 */
@@ -87,7 +87,7 @@ struct order_data_s {
 } while(0)
 #define DEL_OD(o) free(o)
 #define PRT_OD(o) do {							\
-	log_debug("id: %lu", o->id);					\
+	log_debug("id: %lu", o->id);				\
 	log_debug("url: %s", o->url.c_str());		\
 	log_debug("table: %s", o->table.c_str());	\
 	log_debug("times: %d", o->times);			\

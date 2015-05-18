@@ -20,7 +20,7 @@ extern char					*log_buff;
 #define __SEND_LOG(o, hc, rc) do {											\
 	if (redis && redis->IsActived()) {										\
 		snprintf(log_buff, __LOG_BUFF_SZ, 									\
-				 "{\"url\":\"%s\", \"errorcode\":%ld, \"httpcode\":%ld}",		\
+				 "{\"url\":\"%s\", \"errorcode\":%ld, \"httpcode\":%ld}",	\
 				 o->url.c_str(), 											\
 				 rc, 														\
 				 hc);														\
@@ -93,6 +93,7 @@ timeout_request(void* arg)
 	curl = curl_easy_init();
 	
 	curl_easy_setopt(curl, CURLOPT_URL, o->url.c_str());
+	curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
 	curl_easy_setopt(curl, CURLOPT_TIMEOUT, 20L);
 	curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, header_data);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
@@ -104,16 +105,16 @@ timeout_request(void* arg)
 
 		if (http_code == 200) {
 			switch (rsp_code) {
-				case -1:
-				case 1:
-				case 7:
+				case RSP_SUCCESS:
+				case RSP_AGAIN:
+				case RSP_DUP_ORDER:
 					/* 更新队列处理 */
 					__SEND_LOG(o, http_code, rsp_code);
 					if (redis && redis->IsActived()) {
 						value["id"] = (UInt64)o->id;
 						value["url"] = o->url;
 						value["table"] = o->table;
-						value["status"] = 2;
+						value["status"] = ORDER_FINISH;
 						value["errcode"] = (Int64)rsp_code;
 						value["errmsg"] = "";
 						value["httpcode"] = (Int64)http_code;
@@ -124,12 +125,12 @@ timeout_request(void* arg)
 					break;
 				default :
 					__SEND_LOG(o, http_code, rsp_code);
-					__REDO_CHECK(o, rsp_code, value, 53);
+					__REDO_CHECK(o, rsp_code, value, ORDER_ERR_ORDER);
 					break;
 			}
 		} else { //http_code != 200
 			__SEND_LOG(o, http_code, rsp_code);
-			__REDO_CHECK(o, http_code, value, 54);
+			__REDO_CHECK(o, http_code, value, ORDER_ERR_CGI);
 		}
 	}
 	

@@ -9,14 +9,14 @@ timeout_request(void* arg);
 
 extern size_t 
 header_data(char *buffer, 
-			  size_t size, 
-			  size_t nitems, 
-			  void* userdata);
+		  	size_t size, 
+		  	size_t nitems, 
+		  	void* userdata);
 
 extern size_t
 write_data(char* buffer, 
-			 size_t size, 
-			 size_t nitems, 
-			 void* userdata);
+		   size_t size, 
+		   size_t nitems, 
+		   void* userdata);
 
 #endif

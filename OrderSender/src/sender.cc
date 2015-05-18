@@ -86,16 +86,16 @@ sender_t::run()
 					if (http_code == 200) {
 						/* 判断返回值 */
 						switch (rsp_code) {
-							case 1:
-							case -1:
-							case -7:
+							case RSP_SUCCESS:
+							case RSP_AGAIN:
+							case RSP_DUP_ORDER:
 								/* 订单状态为 2 */
 								__SEND_LOG(o, http_code, rsp_code);
 								if (redis && redis->IsActived()) {
 									json["id"] = (UInt64)o->id;
 									json["url"] = o->url;
 									json["table"] = o->table;
-									json["status"] = 2;
+									json["status"] = ORDER_FINISH;
 									json["errcode"] = (Int64)rsp_code;
 									json["errmsg"] = "";
 									json["httpcode"] = (Int64)http_code;
@@ -122,11 +122,11 @@ sender_t::run()
 					timer_start(RTV_VALUE(0), 
 						timeout_request, o, sizeof *o, false);		
 				}
+				
+				curl_easy_cleanup(curl);
 			}
 		}
 	}
-
-	curl_easy_cleanup(curl);
 
 	//__END__(__func__, 0);
 	return 0;
