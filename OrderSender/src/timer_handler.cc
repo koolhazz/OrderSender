@@ -30,7 +30,7 @@ extern char					*log_buff;
 #endif
 
 #ifndef __REDO_CHECK
-#define __REDO_CHECK(o, errno, v, stat) do {									\
+#define __REDO_CHECK(o, http, errno, v, stat) do {								\
 	if (o->times > 6) {															\
 		v["id"] = (UInt64)o->id;												\
 		v["url"] = o->url;														\
@@ -38,6 +38,7 @@ extern char					*log_buff;
 		v["status"] = stat;														\
 		v["errcode"] = (Int64)errno;											\
 		v["errmsg"] = "";														\
+		v["httpcode"] = (Int64)http;											\
 		v["time"] = (Int64)NOW();												\
 		v["retry"] = o->times;													\
 		if (redis && redis->IsActived()) {										\
@@ -125,12 +126,12 @@ timeout_request(void* arg)
 					break;
 				default :
 					__SEND_LOG(o, http_code, rsp_code);
-					__REDO_CHECK(o, rsp_code, value, ORDER_ERR_ORDER);
+					__REDO_CHECK(o, http_code, rsp_code, value, ORDER_ERR_ORDER);
 					break;
 			}
 		} else { //http_code != 200
 			__SEND_LOG(o, http_code, rsp_code);
-			__REDO_CHECK(o, http_code, value, ORDER_ERR_CGI);
+			__REDO_CHECK(o, http_code, rsp_code, value, ORDER_ERR_CGI);
 		}
 	}
 	

@@ -48,7 +48,7 @@ order_log_recording(redis_helper_t* redis)
 
 	if (redis && redis->IsActived()) {
 		redis->Dequeue(g_conf->redis_key, log);
-		if (reader.parse(log, value)) {
+		if (!log.empty() && reader.parse(log, value)) {
 			log_debug(__log_format, __date().c_str(),
 					  getpid(),
 					  value["url"].asCString(),

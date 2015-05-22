@@ -14,7 +14,7 @@ __BEGIN_DECLS
 #endif 
 
 #ifndef DEFAULT_FILE_SIZE
-#define DEFAULT_FILE_SIZE   10 * 1024 //50 * 1024 * 1024
+#define DEFAULT_FILE_SIZE   50 * 1024 * 1024
 #endif
 
 #if CLIENTAPI

@@ -41,7 +41,7 @@ link_directories(/home/AustinChen/tools/jsoncpp-0.6.0/libs/linux-gcc-4.1.2
 
 add_executable(order_logger ${SRC})
 add_definitions(
-	-D__DEBUG__ 
+	-D __DEBUG__ 
 	-D DEFAULT_FILE_NUM=100)
 
 target_link_libraries(order_logger libhiredis.a libjson.a rt)

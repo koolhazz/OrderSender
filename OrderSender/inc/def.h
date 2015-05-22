@@ -47,7 +47,7 @@ enum order_timer_t {
 	tv_1_h 	= 3600	
 };
 
-#if 0
+#if 1
 const int retry_timer_value[6] = { 
 	tv_30_s, 
 	tv_60_s, 
@@ -95,6 +95,7 @@ struct order_data_s {
 
 #define __LOG_BUFF_SZ 1 * ( 1 << 10)
 #define NEW_LB(lb) lb = (char*)malloc(__LOG_BUFF_SZ)
+#define DEL_LB(lb) free(lb)
 
 
 #define NOW() time(NULL)

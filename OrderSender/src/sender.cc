@@ -124,6 +124,8 @@ sender_t::run()
 				}
 				
 				curl_easy_cleanup(curl);
+			} else { // json is empty
+				usleep(5 * 1000); // 5ms sleep
 			}
 		}
 	}

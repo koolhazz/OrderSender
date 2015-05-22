@@ -61,6 +61,7 @@ main(int argc, char** argv)
 
 	while (1) {
 		order_log_recording(g_redis);
+		usleep(5 * 1000);
 	}
 
 	return 0;

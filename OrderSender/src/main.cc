@@ -104,10 +104,20 @@ main(int argc, char* argv[])
 	NEW_LB(log_buff);
 	
 	while (1) {
-		sender->run(); // ¶ÓÁÐÖÐ»ñÈ¡´ý·¢»õµÄ¶©µ¥ÐÅÏ¢
-		timer_run();   // Ö´ÐÐ¶¨Ê±Æ÷
+		sender->run(); // é˜Ÿåˆ—ä¸­èŽ·å–å¾…å‘è´§çš„è®¢å•ä¿¡æ¯
+		timer_run();   // æ‰§è¡Œå®šæ—¶å™¨
 	}
 
+	// sender->run();
+	// timer_run();
+
+	// delete sender;
+	// sender = NULL;
+	// redis = NULL;
+	// DEL_LB(log_buff);
+	// timer_list_del();
+	// DEL_CONF(conf);
+	
 	return 0;	
 }
 
