@@ -123,6 +123,8 @@ timeout_request(void* arg)
 
 						redis->Enqueue("ORDER_UPDATE_Q", writer.write(value).c_str());
 					}
+					DEL_OD(o); //  成功后删除
+					
 					break;
 				default :
 					__SEND_LOG(o, http_code, rsp_code);

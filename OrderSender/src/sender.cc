@@ -103,6 +103,7 @@ sender_t::run()
 									
 									redis->Enqueue("ORDER_UPDATE_Q", writer.write(json).c_str());
 								}
+								DEL_OD(o); // 成功后删除
 								
 								break;
 							default:
