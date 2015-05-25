@@ -24,6 +24,12 @@ __init_conf(conf_t* conf, const char* file)
 							sizeof conf->redis_key,
 							"",
 							file);
+		read_profile_string("redis",
+							"udp_key",
+							conf->redis_udp_key,
+							sizeof conf->redis_udp_key,
+							"",
+							file);
 		conf->redis_port = read_profile_int("redis", "port", 0, file);
 	}
 

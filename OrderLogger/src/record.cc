@@ -12,10 +12,18 @@
 using std::string;
 using namespace Json;
 
+#define __FMT_BUFF_SZ 32 * 1024 // 1M
+#define NEW_FB(fb) fb = (char*)calloc(1, __FMT_BUFF_SZ)
+#define DEL_FB(fb) do {	\
+	free(fb);			\
+	fb = NULL;			\
+} while (0)
+
 typedef class CRedisHelper redis_helper_t;
 extern conf_t *g_conf;
+static char* fmt_buff;
 
-static const char* __log_format = "记录时间:%s 类型:发货结果 进程PID:%d 服务器IP: 客户端IP: 脚本入口:/data/public/wwwroot/paycenter/webapp/pay.boyaa.com/web/facebook/inc/local_currency_payment.php,line:155 日志调用:  用户IP: 用户ID: 订单号: 商品ID: 商品名称:游戏币 支付渠道: 支付PMODE: 应用名称: 应用ID: 支付金额:  日志内容:发货地址:%s 返回结果:%ld    业务cgi响应码:%ld 环境参数:";
+static const char* __LOG_FORMAT = "记录时间:%s 类型:发货结果 进程PID:%d 服务器IP: 客户端IP: 脚本入口:/data/public/wwwroot/paycenter/webapp/pay.boyaa.com/web/facebook/inc/local_currency_payment.php,line:155 日志调用:  用户IP: 用户ID: 订单号: 商品ID: 商品名称:游戏币 支付渠道: 支付PMODE: 应用名称: 应用ID: 支付金额:  日志内容:发货地址:%s 返回结果:%ld    业务cgi响应码:%ld 环境参数:";
 
 static string __attribute__((always_inline))
 __date()
@@ -49,11 +57,23 @@ order_log_recording(redis_helper_t* redis)
 	if (redis && redis->IsActived()) {
 		redis->Dequeue(g_conf->redis_key, log);
 		if (!log.empty() && reader.parse(log, value)) {
-			log_debug(__log_format, __date().c_str(),
+			log_debug(__LOG_FORMAT, __date().c_str(),
 					  getpid(),
 					  value["url"].asCString(),
 					  value["errorcode"].asInt64(),
 					  value["httpcode"].asInt64());
+					  
+			if (fmt_buff == NULL) NEW_FB(fmt_buff);
+			snprintf(fmt_buff, 
+					 __FMT_BUFF_SZ, 
+					 __LOG_FORMAT, 
+					 __date().c_str(),
+					 getpid(),
+				     value["url"].asCString(),
+				     value["errorcode"].asInt64(),
+				     value["httpcode"].asInt64());
+			log_debug("UDP: %s", fmt_buff);
+			redis->Enqueue(g_conf->redis_udp_key, fmt_buff);
 		}
 	}		
 
