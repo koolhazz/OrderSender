@@ -136,7 +136,7 @@ timeout_request(void* arg)
 			__REDO_CHECK(o, http_code, rsp_code, value, ORDER_ERR_CGI);
 		}
 	}
-	
+
 	curl_easy_cleanup(curl);
 
 	__END__(__func__, 0);

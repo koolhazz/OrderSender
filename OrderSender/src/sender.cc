@@ -123,7 +123,7 @@ sender_t::run()
 					timer_start(RTV_VALUE(0), 
 						timeout_request, o, sizeof *o, false);		
 				}
-				
+
 				curl_easy_cleanup(curl);
 			} else { // json is empty
 				usleep(5 * 1000); // 5ms sleep
