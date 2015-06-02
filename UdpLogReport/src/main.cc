@@ -36,7 +36,9 @@ CDWorkDir(const char * path);
 int
 main(int argc, char** argv)
 {
-    CDWorkDir(argv[0]);
+	string json; 
+
+	CDWorkDir(argv[0]);
 	 
 #ifdef _DAEMON_
     if (daemon(1, 0) == 0)
@@ -64,14 +66,10 @@ main(int argc, char** argv)
     Helper::CRedisHelper redis(redis_conf.host, redis_conf.port);
 
 	CUDP UDPDataSend;
-	if(UDPDataSend.UDPCreateSocket()==0)
-	{
+	if(UDPDataSend.UDPCreateSocket() == 0) 	{
 		UDPDataSend.UDPConnect(UDP_conf.host,UDP_conf.port);
 	}
-
-	string json; 
 	
-		
 	while (1) {
 		if (!redis.IsActived()) {
 			log_debug("redis reconnect.\n");

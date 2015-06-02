@@ -55,8 +55,7 @@ private:
 
 	void freeReply() 
 	{ 
-		if(reply) 
-		{
+		if (reply) {
 			freeReplyObject(reply);
 			reply = NULL;
 		}

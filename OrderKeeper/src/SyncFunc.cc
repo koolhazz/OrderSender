@@ -56,7 +56,7 @@ order2db(const order_data_t& order, CMysqlHelper* mysql)
 	ostringstream 	os;
 
 	if (mysql->IsConnected()) {
-		os << "update " << order.table << " set pstats = " << order.status << ", `desc` = '48|" 
+		os << "update " << order.table << " set pstatus = " << order.status << ", `desc` = '48|" 
 			<< order.status << "', pendtime = " << order.time << " where pid = " << order.id << endl;
 		
 		log_debug("SQL: %s", os.str().c_str());

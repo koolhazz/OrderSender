@@ -137,6 +137,7 @@ timeout_request(void* arg)
 		}
 	}
 
+	value.clear();
 	curl_easy_cleanup(curl);
 
 	__END__(__func__, 0);

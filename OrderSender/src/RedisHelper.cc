@@ -2,14 +2,12 @@
 #include "log.h"
 #include <string.h>
 
-
 int
 CRedisHelper::Connect(const char* host, 
 					  const unsigned short& port, 
 					  const unsigned short second)
 {
-	 if (context)
-	 {
+	 if (context) {
 		redisFree(context);
 	 }
 	 
@@ -23,8 +21,7 @@ CRedisHelper::Connect(const char* host,
 int
 CRedisHelper::Connect()
 {
-	 if (context)
-	 {
+	 if (context) {
 		redisFree(context);
 	 }
 	 
@@ -114,8 +111,7 @@ CRedisHelper::Pop(const string& stack, string& value)
 bool
 CRedisHelper::ping()
 {
-	if (!context)
-	{
+	if (!context) {
 		return false;
 	}
 	

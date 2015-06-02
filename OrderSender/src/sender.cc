@@ -26,12 +26,12 @@ extern char					*log_buff;
 #ifndef __SEND_LOG
 #define __SEND_LOG(o, hc, rc) do {											\
 	if (redis && redis->IsActived()) {										\
-		snprintf(log_buff, __LOG_BUFF_SZ, 											\
-				 "{\"url\":\"%s\", \"errorcode\":%ld, \"httpcode\":%ld}", 		\
+		snprintf(log_buff, __LOG_BUFF_SZ, 									\
+				 "{\"url\":\"%s\", \"errorcode\":%ld, \"httpcode\":%ld}", 	\
 				 o->url.c_str(), 											\
 				 rc, 														\
 				 hc);														\
-		redis->Enqueue(conf->redis_log_key, log_buff);								\
+		redis->Enqueue(conf->redis_log_key, log_buff);						\
 	}																		\
 } while (0)																	
 #endif
@@ -124,6 +124,8 @@ sender_t::run()
 						timeout_request, o, sizeof *o, false);		
 				}
 
+				json.clear();
+				value.clear();
 				curl_easy_cleanup(curl);
 			} else { // json is empty
 				usleep(5 * 1000); // 5ms sleep
