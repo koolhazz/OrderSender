@@ -73,6 +73,7 @@ sender_t::run()
 				curl = curl_easy_init();
 				
 				curl_easy_setopt(curl, CURLOPT_URL, o->url.c_str());
+				curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
 				curl_easy_setopt(curl, CURLOPT_TIMEOUT, 20L);
 				curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, header_data);
 				curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
