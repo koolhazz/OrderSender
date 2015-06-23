@@ -64,7 +64,6 @@ main(int argc, char** argv)
 
 	while (1) {
 		sync_order_data(mysql, redis);
-		usleep(1000000);
 	}
 
 	return 0;

@@ -14,6 +14,8 @@ using namespace Json;
 using namespace std;
 using namespace Helper;
 
+#define __WORKER_SLEEP_TIME 10 * 1000 // 10ms
+
 extern redis_conf_t redis_conf;
 
 typedef struct order_data_s order_data_t;
@@ -96,6 +98,7 @@ sync_order_data(CMysqlHelper* mysql, CRedisHelper* redis)
 		redis->Dequeue(redis_conf.key, data);
 
 		if (data.empty()) {
+			usleep(__WORKER_SLEEP_TIME);
 			return 0;
 		}
 
