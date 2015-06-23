@@ -36,7 +36,8 @@ CDWorkDir(const char * path);
 int
 main(int argc, char** argv)
 {
-	string json; 
+	string json;
+	int    
 
 	CDWorkDir(argv[0]);
 	 
