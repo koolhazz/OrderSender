@@ -85,7 +85,7 @@ struct order_data_s {
 		o->times = 0;						\
 	}										\
 } while(0)
-#define DEL_OD(o) free(o)
+#define DEL_OD(o) delete o
 #define PRT_OD(o) do {							\
 	log_debug("id: %lu", o->id);				\
 	log_debug("url: %s", o->url.c_str());		\

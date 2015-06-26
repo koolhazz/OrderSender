@@ -128,6 +128,7 @@ sender_t::run()
 				json.clear();
 				value.clear();
 				curl_easy_cleanup(curl);
+				curl_global_cleanup();
 			} else { // json is empty
 				usleep(5 * 1000); // 5ms sleep
 			}
