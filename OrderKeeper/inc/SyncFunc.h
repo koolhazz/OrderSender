@@ -4,7 +4,8 @@
 #include "ConfigDef.h"
 
 
-namespace Helper {
+namespace Helper 
+{
 class CRedisHelper;
 class CMysqlHelper;
 }
