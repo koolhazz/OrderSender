@@ -43,7 +43,7 @@ bool 			is_daemon = true;
 int
 main(int argc, char** argv)
 {
-	init_log("", "log/");
+	init_log("", "/data/paylog/log/");
 	
 	if (daemon(1, 0) == -1) {
 		log_error("daemon failed.");

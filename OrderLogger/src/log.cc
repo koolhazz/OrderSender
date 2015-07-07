@@ -21,7 +21,7 @@
 } while (0)
 
 #ifndef __FIND_CMD 
-#define __FIND_CMD "find log -name Log*.log | sort -n -t_ -k 2nr,2 -k 3nr,3 | head -n 1"
+#define __FIND_CMD "find /data/paylog/log -name Log*.log | sort -n -t_ -k 2nr,2 -k 3nr,3 | head -n 1"
 #endif
 	
 	
@@ -181,7 +181,7 @@ void write_log (int level, const char *filename, const char *funcname, int linen
     int 			fd = -1;
     struct 			stat stBuf;
     bool 			btruncate = false;
-    struct tm 		tm;
+    //struct tm 		tm;
     time_t 			now;
 	
 	time(&now);

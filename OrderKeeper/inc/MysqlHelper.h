@@ -50,6 +50,9 @@ public:
 	char* GetChar(int col);
 	int	GetInt(int col);
 	float GetFloat(int col);
+	long GetLong(int col);
+	std::string GetString(int col);
+	short GetShort(int col);
 
 private:
 	MYSQL_RES* res_;

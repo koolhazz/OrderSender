@@ -56,6 +56,68 @@ json2order(const string& json, order_data_t& order)
 }
 
 static inline int
+__order2json(CMysqlHelper* mysql, string& json, const order_data_t& order)
+{
+	CMysqlResult 	*result;
+	Value			value;
+	struct timeval	tv;
+	char			sql[128];
+	FastWriter		writer;
+
+	snprintf(sql, sizeof sql, "select * from %s where pid = %lu", order.table.c_str(), order.id);
+	log_debug("ORDER: %s", sql);
+	if (mysql->IsConnected()) {
+		result = mysql->ExecuteQuery(sql);
+		if (result && result->HasNext()) {
+			value["id"] 			= (UInt64)result->GetLong(0);
+			value["pid"] 			= (UInt64)result->GetLong(1);
+			value["mid"] 			= (UInt)result->GetInt(2);
+			value["sitmid"] 		= result->GetString(3);
+			value["buyer"] 			= result->GetString(4);
+			value["sid"] 			= result->GetInt(5);
+			value["appid"] 			= result->GetInt(6);
+			value["pmode"] 			= result->GetInt(7);
+			value["pamount"]		= result->GetFloat(8);
+			value["pcoins"]			= (UInt)result->GetInt(9);
+			value["pchips"]			= (UInt64)result->GetLong(10);
+			value["pcard"]			= (UInt)result->GetInt(11);
+			value["pnum"]			= result->GetInt(12);
+			value["payconfid"]		= (UInt)result->GetInt(13);
+			value["pcoinsnow"]		= (UInt)result->GetInt(14);
+			value["pdealno"]		= result->GetString(15);
+			value["pbankno"]		= result->GetString(16);
+			value["desc"]			= result->GetString(17);
+			value["pstarttime"]		= (UInt)result->GetInt(18);
+			value["pendtime"]		= (UInt)result->GetInt(19);
+			value["pstatus"]		= result->GetInt(20);
+			value["pamount_rate"] 	= result->GetFloat(21);
+			value["pamount_unit"] 	= result->GetString(22);
+			value["pamount_usd"]	= result->GetFloat(23);
+			value["ext_1"]			= result->GetInt(24);
+			value["ext_2"]			= result->GetInt(25);
+			value["ext_3"]			= result->GetInt(26);
+			value["ext_4"]			= result->GetString(27); 
+			value["ext_5"]			= result->GetString(28);
+			value["ext_6"]			= result->GetString(29);
+			value["ext_7"]			= result->GetString(30);
+			value["ext_8"]			= result->GetString(31);
+			value["ext_9"]			= result->GetString(32);
+			value["ext_10"]  		= result->GetString(33);
+
+			gettimeofday(&tv, NULL);
+			value["lts_at"] 		= (UInt64)tv.tv_sec;
+			value["m_at"]			= (UInt64)(tv.tv_sec * 1000 + tv.tv_usec);
+
+			json = writer.write(value);
+			delete result;
+		}
+
+	}
+
+	return 0;
+}
+
+static inline int
 __sync_order(const order_data_t& order, CRedisHelper* redis, const string& sql)
 {
 	Value 		value;
@@ -84,10 +146,12 @@ order2db(const order_data_t& order, CMysqlHelper* mysql, CRedisHelper* redis)
 	ostringstream 	os;
 	unsigned long 	err;
 	string 			sql;
+	char			buff[1024];
+	string			line;
 
 	if (mysql->IsConnected()) {
-		os << "update " << order.table << " set pstatus = " << order.status << ", `desc` = '48|" 
-			<< order.status << "', pendtime = " << order.time << ", ext_1 = " << order.time 
+		os << "update " << order.table << " set pstatus = " << order.status << ", `desc` = concat(`desc`,'|48|" 
+			<< order.status << "'), pendtime = " << order.time << ", ext_1 = " << order.time 
 				<< " where pid = " << order.id;
 		sql = os.str();
 
@@ -96,6 +160,15 @@ order2db(const order_data_t& order, CMysqlHelper* mysql, CRedisHelper* redis)
 		err = mysql->ExecuteNonQuery(sql);
 
 		__sync_order(order, redis, sql);
+
+		__order2json(mysql, line, order);
+
+		snprintf(buff, sizeof buff, "E303EAA51D09FB12CC9F2679812B9858|%lu|update_order_info\t%s",
+				 NOW(), line.c_str());
+		if (redis && redis->IsActived()) {
+			redis->Enqueue("ORDER_UPDATE_LINE_Q", buff);
+			log_debug("LINE: %s", buff);
+		}
 
 		return err;
 	}

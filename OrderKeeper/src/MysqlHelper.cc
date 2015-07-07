@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <mysql.h>
 
+using std::string;
 
 namespace Helper
 {
@@ -171,6 +172,18 @@ float
 CMysqlResult::GetFloat(int col)
 {
 	return atof(row_[col]);
+}
+
+long 
+CMysqlResult::GetLong(int col)
+{
+	return atol(row_[col]);
+}
+
+string
+CMysqlResult::GetString(int col)
+{
+	return string(row_[col]);
 }
 
 }
